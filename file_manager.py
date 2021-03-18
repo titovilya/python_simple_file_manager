@@ -28,6 +28,17 @@ def open_file():
         mb.showerror('Упс', "Файл не найден!")
 
 
+def create_file():
+    new_folder_path = filedialog.askdirectory()
+    new_name = simpledialog.askstring("Input", "Введите новое название для файла: ",
+                                      parent=root)
+    path = os.path.join(new_folder_path, new_name)
+    if path:
+        file = open(path, 'w')
+        file.close()
+        mb.showinfo('Успешно', "Файл создан !")
+
+
 def copy_file():
     started = gui_manager_opener()
     destination = filedialog.askdirectory()
@@ -39,6 +50,7 @@ def delete_file():
     del_file = gui_manager_opener()
     if os.path.exists(del_file):
         os.remove(del_file)
+        mb.showinfo('Успешно', "Файл удален !")
     else:
         mb.showerror('Упс', "Файл не найден !")
 
@@ -80,9 +92,12 @@ def make_folder():
 
 
 def remove_folder():
-    del_folder = filedialog.askdirectory()
-    os.rmdir(del_folder)
-    mb.showinfo('Успешно', "Папка удалена !")
+    try:
+        del_folder = filedialog.askdirectory()
+        os.rmdir(del_folder)
+        mb.showinfo('Успешно', "Папка удалена !")
+    except OSError:
+        mb.showerror('Упс', "Папка не пустая !")
 
 
 def list_files():
@@ -97,7 +112,7 @@ def exit_program():
 
 # GUI
 root = Tk()
-root.geometry("2300x650+400+500")
+root.geometry("2300x700+400+500")
 root.title('File Explorer')
 root.config(background="white")
 
@@ -109,6 +124,9 @@ label_grid = Label(root,
 button_open = Button(root,
                      text="Открыть файл",
                      command=open_file)
+button_create = Button(root,
+                       text="Создать файл",
+                       command=create_file)
 button_copy = Button(root,
                      text="Скопировать файл",
                      command=copy_file)
@@ -139,18 +157,17 @@ label_grid_end = Label(root,
                        width=240,
                        height=5)
 
-
 label_grid.grid(column=1, row=1)
-button_open.grid(column=1, row=2)
-button_copy.grid(column=1, row=3)
-button_del.grid(column=1, row=4)
-button_rename.grid(column=1, row=5)
-button_move.grid(column=1, row=6)
-button_mk_fd.grid(column=1, row=7)
-button_rm_fd.grid(column=1, row=8)
-button_list.grid(column=1, row=9)
-button_exit.grid(column=1, row=10)
-label_grid_end.grid(column=1, row=11)
-
+button_create.grid(column=1, row=2)
+button_open.grid(column=1, row=3)
+button_copy.grid(column=1, row=4)
+button_del.grid(column=1, row=5)
+button_rename.grid(column=1, row=6)
+button_move.grid(column=1, row=7)
+button_mk_fd.grid(column=1, row=8)
+button_rm_fd.grid(column=1, row=9)
+button_list.grid(column=1, row=10)
+button_exit.grid(column=1, row=11)
+label_grid_end.grid(column=1, row=12)
 
 root.mainloop()
